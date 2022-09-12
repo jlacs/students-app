@@ -23,22 +23,30 @@ Route::get('/', function () {
 Route::get('students', [StudentController::class, 'index']);
 
 Route::get('new-student', function (\Doctrine\ORM\EntityManagerInterface $em) {
-    $student = new Student('Tony', 'Ironman');
+    $student = new Student('Steve', 'Rogers');
 
     $em->persist($student);
     $em->flush();
 
-    return 'added!';
+    return 'added student!';
+});
+
+Route::get('new-subject', function (\Doctrine\ORM\EntityManagerInterface $em) {
+    $subject = new Subject('Physical Education');
+
+    $em->persist($subject);
+    $em->flush();
+
+    return 'added subject!';
 });
 
 Route::get('add-student', function (\Doctrine\ORM\EntityManagerInterface $em) {
-    $student = $em->getRepository(Subject::class)->find(2);
+    $subject = $em->getRepository(Subject::class)->find(1);
+    $student = $em->getRepository(Student::class)->find(1);
 
-    $student->addStudent(
-        new Student('Steve', 'Captain America')
-    );
+    $subject->addStudent($student);
 
-    $em->persist($student);
+    $em->persist($subject);
     $em->flush();
 
     return 'added!';
@@ -46,13 +54,12 @@ Route::get('add-student', function (\Doctrine\ORM\EntityManagerInterface $em) {
 
 
 Route::get('add-subject', function (\Doctrine\ORM\EntityManagerInterface $em) {
-    $subject = $em->getRepository(Student::class)->find(1);
+    $subject = $em->getRepository(Subject::class)->find(2);
+    $student = $em->getRepository(Student::class)->find(2);
 
-    $subject->addSubject(
-        new Subject('Calculus')
-    );
+    $student->addSubject($subject);
 
-    $em->persist($subject);
+    $em->persist($student);
     $em->flush();
 
     return 'added!';
